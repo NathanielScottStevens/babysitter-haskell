@@ -22,14 +22,17 @@ calculateBabySitter start end
 -- in the range of 0..11
 -- With 0 = 5:00 PM and 11 = 4:00 AM
 parseTime :: String -> Int
-parseTime time = case period of "AM" -> (parseHour hour) + 7
-                                "PM" -> (parseHour hour) - 5
-  where (hour:period:_) = words time
+parseTime = convertToBabySitterTime . roundUpHour . parseMinutesAndHour . words
 
-parseHour :: String -> Int
-parseHour time = case parsedTime of [hour, 0] -> hour
-                                    [hour, _] -> hour + 1
-  where parsedTime = map (read :: String -> Int) (splitOn ":" time)
+parseMinutesAndHour :: [String] -> (Int, Int, String)
+parseMinutesAndHour (time:period:_) = (hour, minute, period)
+  where (hour:minute:_) = map (read :: String -> Int) (splitOn ":" time)
 
+roundUpHour :: (Int, Int, String) -> (Int, String)
+roundUpHour (hour, 0, period) = (hour, period)
+roundUpHour (hour, _, period) = (hour + 1, period)
 
+convertToBabySitterTime :: (Int, String) -> Int
+convertToBabySitterTime (hour, "AM") = hour + 7
+convertToBabySitterTime (hour, "PM") = hour - 5
 
