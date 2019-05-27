@@ -20,9 +20,9 @@ postMidnightPrice = 16
 
 calculateBabySitter :: String -> String -> String -> Int
 calculateBabySitter start end bed = sum $ map (getCostForHour bedTime) [startTime..(endTime - 1)]
-  where startTime = max minTime $ parseTime start
+  where startTime = parseTime start
         bedTime = parseTime bed
-        endTime = min maxTime $ parseTime end
+        endTime = parseTime end
 
 getCostForHour :: Int -> Int -> Int
 getCostForHour bedTime hour
@@ -35,7 +35,7 @@ getCostForHour bedTime hour
 -- in the range of 0..11
 -- With 0 = 5:00 PM and 11 = 4:00 AM
 parseTime :: String -> Int
-parseTime = convertToBabySitterTime . roundUpHour . parseMinutesAndHour . words
+parseTime = clamp . convertToBabySitterTime . roundUpHour . parseMinutesAndHour . words
 
 parseMinutesAndHour :: [String] -> (Int, Int, String)
 parseMinutesAndHour (time:period:_) = (hour, minute, period)
@@ -49,4 +49,7 @@ convertToBabySitterTime :: (Int, String) -> Int
 convertToBabySitterTime (12, "AM") = midnight
 convertToBabySitterTime (hour, "AM") = hour + 7
 convertToBabySitterTime (hour, "PM") = hour - 5
+
+clamp :: Int -> Int
+clamp = (max minTime) . (min maxTime)
 
