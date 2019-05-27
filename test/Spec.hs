@@ -1,5 +1,4 @@
-import HUnitExample (double, half)
-import Lib (calculateBabySitter, parseTime)
+import Lib (calculateBabySitter)
 import Test.Tasty (defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
 
@@ -14,8 +13,6 @@ unitTests =
     ,handlesMidnightCorrectly
     ,hasStartTimeFloor
     ,hasEndTimeCeiling
-    ,returnsPMTime
-    ,returnsAMTime
     ,roundsUpHour]
 
 normalPrice = 12
@@ -46,11 +43,6 @@ hasEndTimeCeiling =
   testCase "Baby sitter cannot work past 4:00AM"
   $ assertEqual [] postMidnightPrice (calculateBabySitter "3:00 AM" "5:00 AM" "8:00 PM")
 
-returnsPMTime =
-  testCase "5:00 PM is converted to 0" $ assertEqual [] 0 (parseTime "5:00 PM")
-
-returnsAMTime =
-  testCase "4:00 AM is converted to 11" $ assertEqual [] 11 (parseTime "4:00 AM")
-
 roundsUpHour =
-  testCase "5:01 PM is rounded up to 1" $ assertEqual [] 1 (parseTime "5:01 PM")
+  testCase "Rounds up hour"
+  $ assertEqual [] (4 * normalPrice) (calculateBabySitter "5:00 PM" "8:01 PM" "9:00 PM")

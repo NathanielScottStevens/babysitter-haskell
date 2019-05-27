@@ -25,18 +25,6 @@ dependencies:
 library:
   source-dirs: src
 
-executables:
-  baby-sitter-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - baby-sitter
-    - split
-
 tests:
   baby-sitter-test:
     main:                Spec.hs
