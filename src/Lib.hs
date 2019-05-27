@@ -14,15 +14,21 @@ minTime = 0
 midnight = 7
 maxTime = 11
 
-calculateBabySitter :: String -> String -> Int
-calculateBabySitter start end = sum $ map getCostForHour [startTime..(endTime - 1)]
+normalPrice = 12
+postBedtimePrice = 8
+postMidnightPrice = 16
+
+calculateBabySitter :: String -> String -> String -> Int
+calculateBabySitter start end bed = sum $ map (getCostForHour bedTime) [startTime..(endTime - 1)]
   where startTime = max minTime $ parseTime start
+        bedTime = parseTime bed
         endTime = min maxTime $ parseTime end
 
-getCostForHour :: Int -> Int
-getCostForHour hour
-  | hour < midnight = 12
-  | hour >= midnight = 16
+getCostForHour :: Int -> Int -> Int
+getCostForHour bedTime hour
+  | hour >= midnight = postMidnightPrice
+  | hour >= bedTime = postBedtimePrice
+  | otherwise = normalPrice
 
 
 -- To simplify calculations, standard time is converted to an hour
