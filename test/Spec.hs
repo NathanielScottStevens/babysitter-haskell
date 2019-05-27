@@ -9,23 +9,36 @@ unitTests =
   testGroup
     "Unit tests"
     [returnsCorrectPriceForNormalHours
+    ,returnsCorrectPriceForAfterMidnightHours
+    ,handlesMidnightCorrectly
     ,hasStartTimeFloor
     ,hasEndTimeCeiling
     ,returnsPMTime
     ,returnsAMTime
     ,roundsUpHour]
 
+preBedtimePrice = 12
+postMidnightPrice = 16
+
 returnsCorrectPriceForNormalHours =
   testCase "Returns correct price for normal hours"
-  $ assertEqual [] 36 (calculateBabySitter "5:00 PM" "8:00 PM")
+  $ assertEqual [] (3 * preBedtimePrice) (calculateBabySitter "5:00 PM" "8:00 PM")
+
+returnsCorrectPriceForAfterMidnightHours =
+  testCase "Returns correct price for after midnight hours"
+  $ assertEqual [] (3 * postMidnightPrice) (calculateBabySitter "1:00 AM" "4:00 AM")
+
+handlesMidnightCorrectly =
+  testCase "Handles midnight correctly"
+  $ assertEqual [] postMidnightPrice (calculateBabySitter "12:00 AM" "1:00 AM")
 
 hasStartTimeFloor =
-  testCase "Baby sitter cannot start before 5:00PM (17:00)"
-  $ assertEqual [] 12 (calculateBabySitter "4:00 PM" "6:00 PM")
+  testCase "Baby sitter cannot start before 5:00PM"
+  $ assertEqual [] preBedtimePrice (calculateBabySitter "4:00 PM" "6:00 PM")
 
 hasEndTimeCeiling =
-  testCase "Baby sitter cannot work past 4:00AM (04:00)"
-  $ assertEqual [] 12 (calculateBabySitter "3:00 AM" "5:00 AM")
+  testCase "Baby sitter cannot work past 4:00AM"
+  $ assertEqual [] postMidnightPrice (calculateBabySitter "3:00 AM" "5:00 AM")
 
 returnsPMTime =
   testCase "5:00 PM is converted to 0" $ assertEqual [] 0 (parseTime "5:00 PM" )
