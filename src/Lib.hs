@@ -12,8 +12,8 @@ normalPrice = 12
 postBedtimePrice = 8
 postMidnightPrice = 16
 
--- To simplify calculations, standard time is converted to an hour
--- in the range of 0..11
+-- To simplify calculations,
+-- standard time is converted to an hour in the range of 0..11
 -- With 0 = 5:00 PM and 11 = 4:00 AM
 calculateBabySitter :: String -> String -> String -> Int
 calculateBabySitter start end bed = sum $ map (getCostForHour bedTime) [startTime..(endTime - 1)]
